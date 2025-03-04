@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel处理工具</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 4px;
+        }
+        .file-input-wrapper:hover {
+            border-color: #4CAF50;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Excel表格处理工具</h2>
+        <div class="alert" id="errorAlert"></div>
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <div class="file-input-wrapper">
+                    <input type="file" name="file" accept=".xlsx" class="form-control" id="fileInput">
+                    <p>点击或拖拽文件到此处</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="referenceCol">参考列：</label>
+                <input type="text" id="referenceCol" name="reference_col" 
+                       class="form-control" placeholder="输入列名(如: A, B, AA)" value="A">
+                <div class="help-text">请输入单个列名，例如：A、B、AA等</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="processCols">处理列：</label>
+                <input type="text" id="processCols" name="process_cols" 
+                       class="form-control" placeholder="输入列名，用逗号分隔" value="B,C">
+                <div class="help-text">请输入要处理的列名，多个列用逗号分隔，例如：B,C,D,AA</div>
+            </div>
+            
+            <button type="submit" class="submit-btn">处理文件</button>
+        </form>
+    </div>
+
+    <script>
+        // 文件拖拽处理
+        const dropZone = document.querySelector('.file-input-wrapper');
+        const fileInput = document.getElementById('fileInput');
+        const errorAlert = document.getElementById('errorAlert');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.style.borderColor = '#4CAF50';
+        }
+
+        function unhighlight(e) {
+            dropZone.style.borderColor = '#ddd';
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+        }
+
+        // 表单验证
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const referenceCol = document.getElementById('referenceCol').value;
+            const processCols = document.getElementById('processCols').value;
+            
+            if (!fileInput.files.length) {
+                showError('请选择Excel文件');
+                e.preventDefault();
+                return;
+            }
+            
+            if (!referenceCol || !processCols) {
+                showError('请填写参考列和处理列');
+                e.preventDefault();
+                return;
+            }
+        });
+
+        function showError(message) {
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
