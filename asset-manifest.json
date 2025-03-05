@@ -1,10 +1,13 @@
 {
   "files": {
-    "main.js": "/EXCELBHEBBING/static/js/main.bfeac4b6.js",
+    "main.css": "/EXCELBHEBBING/static/css/main.8c01e45c.css",
+    "main.js": "/EXCELBHEBBING/static/js/main.abc9ed3a.js",
     "index.html": "/EXCELBHEBBING/index.html",
-    "main.bfeac4b6.js.map": "/EXCELBHEBBING/static/js/main.bfeac4b6.js.map"
+    "main.8c01e45c.css.map": "/EXCELBHEBBING/static/css/main.8c01e45c.css.map",
+    "main.abc9ed3a.js.map": "/EXCELBHEBBING/static/js/main.abc9ed3a.js.map"
   },
   "entrypoints": [
-    "static/js/main.bfeac4b6.js"
+    "static/css/main.8c01e45c.css",
+    "static/js/main.abc9ed3a.js"
   ]
 }
